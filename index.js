@@ -1,9 +1,8 @@
 const express = require("express");
+const { User } = require("./models/user");
 const port = process.env.PORT;
 
 const app = express();
-
-const port = 3000;
 
 app.get("/", (req, res) => {
   res.json({
@@ -11,6 +10,12 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+syncModels().then((_) => {
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
 });
+
+async function syncModels() {
+  await User.sync({ alter: true });
+}
